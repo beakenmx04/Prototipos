@@ -56,7 +56,8 @@
 
         <div class="flex justify-center items-center">
             <!-- SVG Container -->
-            <svg id="workflow-svg" viewBox="0 0 1000 900" class="w-full h-auto" preserveAspectRatio="xMidYMid meet">
+            <!-- Increased viewBox height to accommodate the added step 8 -->
+            <svg id="workflow-svg" viewBox="0 0 1000 970" class="w-full h-auto" preserveAspectRatio="xMidYMid meet">
                 <!-- Define arrowhead marker -->
                 <defs>
                     <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
@@ -97,17 +98,13 @@
                 <!-- Step 7: Pegar Código en Archivo GitHub -->
                 <rect x="350" y="770" width="300" height="70" class="diagram-box" />
                 <text x="500" y="805" class="diagram-text">7. Pegar Código en Archivo GitHub</text>
-                <line x1="500" y1="840" x2="500" y2="870" class="diagram-arrow" />
+                <!-- Arrow connecting step 7 to step 8 -->
+                <line x1="500" y1="840" x2="500" y2="890" class="diagram-arrow" />
 
                 <!-- Step 8: Visualizar Prototipo en URL de GitHub -->
-                <rect x="350" y="870" width="300" height="70" class="diagram-box" />
-                <text x="500" y="905" class="diagram-text">8. Visualizar Prototipo en URL de GitHub</text>
+                <rect x="350" y="890" width="300" height="70" class="diagram-box" />
+                <text x="500" y="925" class="diagram-text">8. Visualizar Prototipo en URL de GitHub</text>
             </svg>
-
-            <br>
-            <br>
-            <br><br>
-            
         </div>
     </div>
 
