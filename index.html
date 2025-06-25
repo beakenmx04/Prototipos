@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Personal de Marketing</title>
+    <title>Registro de Alumnos</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -28,20 +28,20 @@
     <div class="max-w-4xl w-full space-y-8 bg-white p-10 rounded-xl shadow-2xl">
         <div class="text-center">
             <h1 class="text-4xl font-extrabold text-gray-900 mb-4">
-                Registro de Personal
+                Registro de Alumnos
             </h1>
-            <p class="text-lg text-gray-600">Empresa de Marketing</p>
+            <p class="text-lg text-gray-600">Sistema Escolar</p>
             <p id="user-id-display" class="text-sm text-gray-500 mt-2"></p>
         </div>
 
-        <!-- Personnel Registration Form -->
-        <form id="personnel-form" class="mt-8 space-y-6">
+        <!-- Student Registration Form -->
+        <form id="student-form" class="mt-8 space-y-6">
             <div class="rounded-md shadow-sm -space-y-px">
                 <div>
                     <label for="name" class="sr-only">Nombre Completo</label>
                     <input id="name" name="name" type="text" autocomplete="name" required
                            class="appearance-none rounded-t-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                           placeholder="Nombre Completo">
+                           placeholder="Nombre Completo del Alumno">
                 </div>
                 <div>
                     <label for="email" class="sr-only">Correo Electrónico</label>
@@ -50,33 +50,39 @@
                            placeholder="Correo Electrónico">
                 </div>
                 <div>
-                    <label for="position" class="sr-only">Puesto</label>
-                    <input id="position" name="position" type="text" required
+                    <label for="grade" class="sr-only">Grado</label>
+                    <input id="grade" name="grade" type="text" required
                            class="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                           placeholder="Puesto (Ej: Diseñador Gráfico)">
+                           placeholder="Grado (Ej: 5° Primaria, 1° Secundaria)">
                 </div>
                 <div>
-                    <label for="department" class="sr-only">Departamento</label>
-                    <input id="department" name="department" type="text" required
+                    <label for="group" class="sr-only">Grupo</label>
+                    <input id="group" name="group" type="text" required
+                           class="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                           placeholder="Grupo (Ej: A, B, C)">
+                </div>
+                <div>
+                    <label for="student-id" class="sr-only">Matrícula</label>
+                    <input id="student-id" name="student-id" type="text" required
                            class="appearance-none rounded-b-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                           placeholder="Departamento (Ej: Creativo)">
+                           placeholder="Número de Matrícula">
                 </div>
             </div>
 
             <div>
                 <button type="submit"
                         class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    Registrar Personal
+                    Registrar Alumno
                 </button>
             </div>
         </form>
 
-        <!-- Personnel List Display -->
+        <!-- Students List Display -->
         <div class="mt-10">
-            <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">Personal Registrado</h2>
-            <div id="personnel-list" class="space-y-4">
-                <!-- Personnel items will be loaded here by JavaScript -->
-                <p class="text-center text-gray-500" id="loading-message">Cargando personal...</p>
+            <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">Alumnos Registrados</h2>
+            <div id="students-list" class="space-y-4">
+                <!-- Student items will be loaded here by JavaScript -->
+                <p class="text-center text-gray-500" id="loading-message">Cargando alumnos...</p>
             </div>
         </div>
 
@@ -128,8 +134,8 @@
         let isAuthReady = false;
 
         // Get DOM elements
-        const personnelForm = document.getElementById('personnel-form');
-        const personnelList = document.getElementById('personnel-list');
+        const studentForm = document.getElementById('student-form');
+        const studentsList = document.getElementById('students-list');
         const loadingMessage = document.getElementById('loading-message');
         const userIdDisplay = document.getElementById('user-id-display');
 
@@ -181,7 +187,7 @@
                 console.log("Usuario autenticado:", currentUserId);
                 isAuthReady = true;
                 // Once authenticated, start listening for data
-                listenForPersonnelData();
+                listenForStudentsData();
             } else {
                 // User is signed out, sign in anonymously if not already trying to sign in.
                 console.log("No hay usuario, iniciando sesión anónimamente...");
@@ -201,10 +207,10 @@
 
 
         /**
-         * Handles the form submission to add new personnel.
+         * Handles the form submission to add new students.
          * @param {Event} e - The form submission event.
          */
-        personnelForm.addEventListener('submit', async (e) => {
+        studentForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
             if (!isAuthReady) {
@@ -215,73 +221,76 @@
 
             const name = document.getElementById('name').value;
             const email = document.getElementById('email').value;
-            const position = document.getElementById('position').value;
-            const department = document.getElementById('department').value;
+            const grade = document.getElementById('grade').value;
+            const group = document.getElementById('group').value;
+            const studentId = document.getElementById('student-id').value;
 
             try {
                 // Construct the collection path for private data
                 const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-                const personnelCollectionRef = collection(db, `artifacts/${appId}/users/${currentUserId}/personnel`);
+                const studentsCollectionRef = collection(db, `artifacts/${appId}/users/${currentUserId}/students`);
 
-                await addDoc(personnelCollectionRef, {
+                await addDoc(studentsCollectionRef, {
                     name: name,
                     email: email,
-                    position: position,
-                    department: department,
+                    grade: grade,
+                    group: group,
+                    studentId: studentId,
                     createdAt: new Date().toISOString() // Timestamp for ordering if needed
                 });
 
-                showConfirmationModal("Éxito", "Personal registrado exitosamente.").then(() => {
-                    personnelForm.reset(); // Clear the form
+                showConfirmationModal("Éxito", "Alumno registrado exitosamente.").then(() => {
+                    studentForm.reset(); // Clear the form
                 });
 
             } catch (e) {
                 console.error("Error al añadir documento: ", e);
-                showConfirmationModal("Error", `Hubo un error al registrar el personal: ${e.message}`);
+                showConfirmationModal("Error", `Hubo un error al registrar el alumno: ${e.message}`);
             }
         });
 
         /**
-         * Listens for real-time updates to the personnel collection and renders them.
+         * Listens for real-time updates to the students collection and renders them.
          */
-        function listenForPersonnelData() {
+        function listenForStudentsData() {
             if (!isAuthReady || !currentUserId) {
                 console.log("No se puede escuchar datos: la autenticación no está lista o el userId no está disponible.");
                 return;
             }
 
             const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-            const personnelCollectionRef = collection(db, `artifacts/${appId}/users/${currentUserId}/personnel`);
+            const studentsCollectionRef = collection(db, `artifacts/${appId}/users/${currentUserId}/students`);
 
-            onSnapshot(personnelCollectionRef, (snapshot) => {
-                personnelList.innerHTML = ''; // Clear current list
+            onSnapshot(studentsCollectionRef, (snapshot) => {
+                studentsList.innerHTML = ''; // Clear current list
                 loadingMessage.classList.add('hidden'); // Hide loading message
 
                 if (snapshot.empty) {
-                    personnelList.innerHTML = '<p class="text-center text-gray-500">No hay personal registrado aún.</p>';
+                    studentsList.innerHTML = '<p class="text-center text-gray-500">No hay alumnos registrados aún.</p>';
                     return;
                 }
 
                 snapshot.forEach((doc) => {
                     const data = doc.data();
-                    const personnelId = doc.id;
+                    const docId = doc.id;
 
-                    const personnelItem = document.createElement('div');
-                    personnelItem.classList.add('flex', 'flex-col', 'sm:flex-row', 'items-center', 'justify-between', 'bg-gray-50', 'p-4', 'rounded-lg', 'shadow-sm', 'border', 'border-gray-200');
+                    const studentItem = document.createElement('div');
+                    studentItem.classList.add('flex', 'flex-col', 'sm:flex-row', 'items-center', 'justify-between', 'bg-gray-50', 'p-4', 'rounded-lg', 'shadow-sm', 'border', 'border-gray-200');
 
-                    personnelItem.innerHTML = `
+                    studentItem.innerHTML = `
                         <div class="flex-grow text-gray-800 text-center sm:text-left mb-2 sm:mb-0">
                             <p class="font-semibold text-lg">${data.name}</p>
                             <p class="text-sm text-gray-600">Email: ${data.email}</p>
-                            <p class="text-sm text-gray-600">Puesto: ${data.position}</p>
-                            <p class="text-sm text-gray-600">Departamento: ${data.department}</p>
+                            <p class="text-sm text-gray-600">Grado: ${data.grade}</p>
+                            <p class="text-sm text-gray-600">Grupo: ${data.group}</p>
+                            <p class="text-sm text-gray-600">Matrícula: ${data.studentId}</p>
                         </div>
-                        <button data-id="${personnelId}"
+                        <button data-id="${docId}"
                                 class="delete-btn bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md transition duration-150 ease-in-out">
                             Eliminar
                         </button>
                     `;
-                    personnelList.appendChild(personnelItem);
+                    studentsList.appendChild(studentItem);
                 });
 
                 // Attach event listeners to newly created delete buttons
@@ -290,19 +299,19 @@
                 });
             }, (error) => {
                 console.error("Error al obtener documentos en tiempo real:", error);
-                personnelList.innerHTML = `<p class="text-center text-red-500">Error al cargar el personal: ${error.message}</p>`;
+                studentsList.innerHTML = `<p class="text-center text-red-500">Error al cargar los alumnos: ${error.message}</p>`;
                 loadingMessage.classList.add('hidden');
             });
         }
 
         /**
-         * Handles the deletion of a personnel record.
+         * Handles the deletion of a student record.
          * @param {Event} e - The click event from the delete button.
          */
         async function handleDelete(e) {
-            const personnelId = e.target.dataset.id;
-            if (!personnelId) {
-                console.error("ID de personal no encontrado para eliminar.");
+            const docId = e.target.dataset.id;
+            if (!docId) {
+                console.error("ID de alumno no encontrado para eliminar.");
                 return;
             }
 
@@ -314,18 +323,18 @@
 
             const confirmed = await showConfirmationModal(
                 "Confirmar Eliminación",
-                "¿Estás seguro de que quieres eliminar este registro de personal? Esta acción es irreversible."
+                "¿Estás seguro de que quieres eliminar este registro de alumno? Esta acción es irreversible."
             );
 
             if (confirmed) {
                 try {
                     const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-                    const docRef = doc(db, `artifacts/${appId}/users/${currentUserId}/personnel`, personnelId);
+                    const docRef = doc(db, `artifacts/${appId}/users/${currentUserId}/students`, docId);
                     await deleteDoc(docRef);
-                    showConfirmationModal("Éxito", "Personal eliminado exitosamente.");
+                    showConfirmationModal("Éxito", "Alumno eliminado exitosamente.");
                 } catch (error) {
                     console.error("Error al eliminar documento: ", error);
-                    showConfirmationModal("Error", `Hubo un error al eliminar el personal: ${error.message}`);
+                    showConfirmationModal("Error", `Hubo un error al eliminar el alumno: ${error.message}`);
                 }
             } else {
                 console.log("Eliminación cancelada.");
