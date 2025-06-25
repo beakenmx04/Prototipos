@@ -1,187 +1,337 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Registro de Libros</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: #f0f4f8;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      min-height: 100vh;
-      padding: 20px;
-    }
-    .container {
-      background-color: #ffffff;
-      border-radius: 12px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-      padding: 32px;
-      max-width: 800px;
-      width: 100%;
-      margin: 20px auto;
-    }
-    .message-box {
-      position: fixed;
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background-color: #4caf50;
-      color: white;
-      padding: 12px 24px;
-      border-radius: 8px;
-      z-index: 1000;
-      display: none;
-    }
-    .message-box.error {
-      background-color: #f44336;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Personal de Marketing</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for Inter font and general body styling */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* Light gray background */
+        }
+        /* Style for interactive elements to ensure good touch target size */
+        button, input[type="submit"] {
+            padding: 0.75rem 1.5rem; /* Sufficient padding for tapping */
+            border-radius: 0.5rem; /* Rounded corners */
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        button:hover, input[type="submit"]:hover {
+            opacity: 0.9;
+        }
+    </style>
 </head>
-<body>
-  <div class="container">
-    <h1 class="text-3xl font-bold text-center text-gray-800 mb-8">Registro de Libros</h1>
+<body class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gray-100">
+    <div class="max-w-4xl w-full space-y-8 bg-white p-10 rounded-xl shadow-2xl">
+        <div class="text-center">
+            <h1 class="text-4xl font-extrabold text-gray-900 mb-4">
+                Registro de Personal
+            </h1>
+            <p class="text-lg text-gray-600">Empresa de Marketing</p>
+            <p id="user-id-display" class="text-sm text-gray-500 mt-2"></p>
+        </div>
 
-    <div class="mb-6 p-4 bg-blue-50 rounded-lg shadow-inner">
-      <p class="text-sm text-blue-800 font-medium">
-        Su ID de Usuario: <span id="userIdDisplay" class="font-bold text-blue-900 break-words">Cargando...</span>
-      </p>
+        <!-- Personnel Registration Form -->
+        <form id="personnel-form" class="mt-8 space-y-6">
+            <div class="rounded-md shadow-sm -space-y-px">
+                <div>
+                    <label for="name" class="sr-only">Nombre Completo</label>
+                    <input id="name" name="name" type="text" autocomplete="name" required
+                           class="appearance-none rounded-t-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                           placeholder="Nombre Completo">
+                </div>
+                <div>
+                    <label for="email" class="sr-only">Correo Electrónico</label>
+                    <input id="email" name="email" type="email" autocomplete="email" required
+                           class="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                           placeholder="Correo Electrónico">
+                </div>
+                <div>
+                    <label for="position" class="sr-only">Puesto</label>
+                    <input id="position" name="position" type="text" required
+                           class="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                           placeholder="Puesto (Ej: Diseñador Gráfico)">
+                </div>
+                <div>
+                    <label for="department" class="sr-only">Departamento</label>
+                    <input id="department" name="department" type="text" required
+                           class="appearance-none rounded-b-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                           placeholder="Departamento (Ej: Creativo)">
+                </div>
+            </div>
+
+            <div>
+                <button type="submit"
+                        class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Registrar Personal
+                </button>
+            </div>
+        </form>
+
+        <!-- Personnel List Display -->
+        <div class="mt-10">
+            <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">Personal Registrado</h2>
+            <div id="personnel-list" class="space-y-4">
+                <!-- Personnel items will be loaded here by JavaScript -->
+                <p class="text-center text-gray-500" id="loading-message">Cargando personal...</p>
+            </div>
+        </div>
+
+        <!-- Modal for confirmation (instead of alert/confirm) -->
+        <div id="confirmation-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+            <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+                <div class="mt-3 text-center">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">Confirmación</h3>
+                    <div class="mt-2 px-7 py-3">
+                        <p class="text-sm text-gray-500" id="modal-message">¿Estás seguro de que quieres realizar esta acción?</p>
+                    </div>
+                    <div class="items-center px-4 py-3">
+                        <button id="modal-cancel-btn" class="px-4 py-2 bg-gray-300 text-black rounded-md mr-2 hover:bg-gray-400">
+                            Cancelar
+                        </button>
+                        <button id="modal-confirm-btn" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">
+                            Confirmar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <form id="bookForm" class="mb-8">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-        <div>
-          <label for="title" class="block text-gray-700 font-medium mb-1">Título del Libro</label>
-          <input type="text" id="title" required class="w-full px-4 py-2 border rounded-lg" placeholder="Ej: Cien años de soledad">
-        </div>
-        <div>
-          <label for="author" class="block text-gray-700 font-medium mb-1">Autor</label>
-          <input type="text" id="author" required class="w-full px-4 py-2 border rounded-lg" placeholder="Ej: Gabriel García Márquez">
-        </div>
-      </div>
-      <div class="mb-6">
-        <label for="isbn" class="block text-gray-700 font-medium mb-1">ISBN</label>
-        <input type="text" id="isbn" class="w-full px-4 py-2 border rounded-lg" placeholder="Ej: 978-3-16-148410-0">
-      </div>
-      <button type="submit" class="btn-primary w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 font-semibold">Registrar Libro</button>
-    </form>
+    <script type="module">
+        // Import Firebase modules from CDN
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-    <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-3">Libros Registrados</h2>
-    <div id="booksList" class="space-y-4">
-      <p id="noBooksMessage" class="text-gray-500 text-center hidden">No hay libros registrados aún.</p>
-    </div>
-  </div>
+        // Firebase configuration (provided by the user)
+        const firebaseConfig = {
+            apiKey: "AIzaSyC65_73xS1pXS8gD7PT9DoA8o74OOBk448",
+            authDomain: "prototipo-34750.firebaseapp.com",
+            projectId: "prototipo-34750",
+            storageBucket: "prototipo-34750.firebasestorage.app",
+            messagingSenderId: "511521364025",
+            appId: "1:511521364025:web:9019ab3a4b2fc6c4c095e8",
+            measurementId: "G-NK571VCY70"
+        };
 
-  <div id="messageBox" class="message-box"></div>
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-    import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        // Global variables for Firebase instances and user ID
+        let currentUserId = null;
+        let isAuthReady = false;
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyC65_73xS1pXS8gD7PT9DoA8o74OOBk448",
-      authDomain: "prototipo-34750.firebaseapp.com",
-      projectId: "prototipo-34750",
-      storageBucket: "prototipo-34750.firebasestorage.app",
-      messagingSenderId: "511521364025",
-      appId: "1:511521364025:web:9019ab3a4b2fc6c4c095e8",
-      measurementId: "G-NK571VCY70"
-    };
+        // Get DOM elements
+        const personnelForm = document.getElementById('personnel-form');
+        const personnelList = document.getElementById('personnel-list');
+        const loadingMessage = document.getElementById('loading-message');
+        const userIdDisplay = document.getElementById('user-id-display');
 
-    const appId = "registro-libros";
-    const app = initializeApp(firebaseConfig); // 🔌 Conexión a Firebase
-    const db = getFirestore(app);             // 📡 Conexión a Firestore
-    const auth = getAuth(app);                // 🔐 Autenticación
+        // Modal elements
+        const confirmationModal = document.getElementById('confirmation-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalMessage = document.getElementById('modal-message');
+        const modalConfirmBtn = document.getElementById('modal-confirm-btn');
+        const modalCancelBtn = document.getElementById('modal-cancel-btn');
 
-    const bookForm = document.getElementById("bookForm");
-    const booksList = document.getElementById("booksList");
-    const userIdDisplay = document.getElementById("userIdDisplay");
-    const messageBox = document.getElementById("messageBox");
-    const noBooksMessage = document.getElementById("noBooksMessage");
+        /**
+         * Shows a custom confirmation modal.
+         * @param {string} title - The title of the modal.
+         * @param {string} message - The message to display.
+         * @returns {Promise<boolean>} A promise that resolves to true if confirmed, false otherwise.
+         */
+        function showConfirmationModal(title, message) {
+            return new Promise((resolve) => {
+                modalTitle.textContent = title;
+                modalMessage.textContent = message;
+                confirmationModal.classList.remove('hidden');
 
-    let userId = null;
+                const confirmHandler = () => {
+                    confirmationModal.classList.add('hidden');
+                    modalConfirmBtn.removeEventListener('click', confirmHandler);
+                    modalCancelBtn.removeEventListener('click', cancelHandler);
+                    resolve(true);
+                };
 
-    function showMessage(msg, isError = false) {
-      messageBox.textContent = msg;
-      messageBox.className = "message-box" + (isError ? " error" : "");
-      messageBox.style.display = "block";
-      setTimeout(() => messageBox.style.display = "none", 3000);
-    }
+                const cancelHandler = () => {
+                    confirmationModal.classList.add('hidden');
+                    modalConfirmBtn.removeEventListener('click', confirmHandler);
+                    modalCancelBtn.removeEventListener('click', cancelHandler);
+                    resolve(false);
+                };
 
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        userId = user.uid;
-        userIdDisplay.textContent = userId;
-        listenForBooks(); // 📚 Conexión a colección Firestore
-      } else {
-        await signInAnonymously(auth);
-      }
-    });
-
-    function listenForBooks() {
-      const ref = collection(db, `artifacts/${appId}/users/${userId}/books`);
-      const q = query(ref);
-      onSnapshot(q, (snapshot) => {
-        booksList.innerHTML = "";
-        if (snapshot.empty) {
-          noBooksMessage.classList.remove("hidden");
-        } else {
-          noBooksMessage.classList.add("hidden");
-          snapshot.forEach((docSnap) => {
-            const book = docSnap.data();
-            const el = document.createElement("div");
-            el.className = "flex justify-between items-center bg-gray-50 rounded-lg p-4 shadow";
-            el.innerHTML = `
-              <div>
-                <p class="font-semibold text-gray-800">${book.title}</p>
-                <p class="text-sm text-gray-600">Autor: ${book.author}</p>
-                <p class="text-sm text-gray-600">ISBN: ${book.isbn || "N/A"}</p>
-              </div>
-              <button class="bg-red-500 text-white px-3 py-1 rounded-lg text-sm delete-btn" data-id="${docSnap.id}">Eliminar</button>
-            `;
-            booksList.appendChild(el);
-          });
+                modalConfirmBtn.addEventListener('click', confirmHandler);
+                modalCancelBtn.addEventListener('click', cancelHandler);
+            });
         }
-      });
-    }
 
-    bookForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const title = document.getElementById("title").value;
-      const author = document.getElementById("author").value;
-      const isbn = document.getElementById("isbn").value;
 
-      if (!userId) return showMessage("Usuario no autenticado", true);
-
-      try {
-        await addDoc(collection(db, `artifacts/${appId}/users/${userId}/books`), {
-          title, author, isbn, createdAt: new Date()
+        // Authenticate user
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                // User is signed in.
+                currentUserId = user.uid;
+                userIdDisplay.textContent = `ID de Usuario: ${currentUserId}`;
+                console.log("Usuario autenticado:", currentUserId);
+                isAuthReady = true;
+                // Once authenticated, start listening for data
+                listenForPersonnelData();
+            } else {
+                // User is signed out, sign in anonymously if not already trying to sign in.
+                console.log("No hay usuario, iniciando sesión anónimamente...");
+                try {
+                     // Check if __initial_auth_token is provided and use it, otherwise sign in anonymously
+                    if (typeof __initial_auth_token !== 'undefined') {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+                } catch (error) {
+                    console.error("Error al iniciar sesión anónimamente:", error);
+                    userIdDisplay.textContent = "Error al autenticar. Por favor, recarga la página.";
+                }
+            }
         });
-        showMessage("Libro registrado correctamente.");
-        bookForm.reset();
-      } catch (err) {
-        console.error(err);
-        showMessage("Error al registrar libro", true);
-      }
-    });
 
-    booksList.addEventListener("click", async (e) => {
-      if (e.target.classList.contains("delete-btn")) {
-        const id = e.target.dataset.id;
-        try {
-          await deleteDoc(doc(db, `artifacts/${appId}/users/${userId}/books`, id));
-          showMessage("Libro eliminado.");
-        } catch (err) {
-          console.error(err);
-          showMessage("Error al eliminar libro", true);
+
+        /**
+         * Handles the form submission to add new personnel.
+         * @param {Event} e - The form submission event.
+         */
+        personnelForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (!isAuthReady) {
+                console.log("Autenticación no lista. Inténtalo de nuevo.");
+                showConfirmationModal("Error", "La autenticación no está lista. Por favor, espera un momento y vuelve a intentarlo.");
+                return;
+            }
+
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const position = document.getElementById('position').value;
+            const department = document.getElementById('department').value;
+
+            try {
+                // Construct the collection path for private data
+                const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+                const personnelCollectionRef = collection(db, `artifacts/${appId}/users/${currentUserId}/personnel`);
+
+                await addDoc(personnelCollectionRef, {
+                    name: name,
+                    email: email,
+                    position: position,
+                    department: department,
+                    createdAt: new Date().toISOString() // Timestamp for ordering if needed
+                });
+
+                showConfirmationModal("Éxito", "Personal registrado exitosamente.").then(() => {
+                    personnelForm.reset(); // Clear the form
+                });
+
+            } catch (e) {
+                console.error("Error al añadir documento: ", e);
+                showConfirmationModal("Error", `Hubo un error al registrar el personal: ${e.message}`);
+            }
+        });
+
+        /**
+         * Listens for real-time updates to the personnel collection and renders them.
+         */
+        function listenForPersonnelData() {
+            if (!isAuthReady || !currentUserId) {
+                console.log("No se puede escuchar datos: la autenticación no está lista o el userId no está disponible.");
+                return;
+            }
+
+            const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+            const personnelCollectionRef = collection(db, `artifacts/${appId}/users/${currentUserId}/personnel`);
+
+            onSnapshot(personnelCollectionRef, (snapshot) => {
+                personnelList.innerHTML = ''; // Clear current list
+                loadingMessage.classList.add('hidden'); // Hide loading message
+
+                if (snapshot.empty) {
+                    personnelList.innerHTML = '<p class="text-center text-gray-500">No hay personal registrado aún.</p>';
+                    return;
+                }
+
+                snapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const personnelId = doc.id;
+
+                    const personnelItem = document.createElement('div');
+                    personnelItem.classList.add('flex', 'flex-col', 'sm:flex-row', 'items-center', 'justify-between', 'bg-gray-50', 'p-4', 'rounded-lg', 'shadow-sm', 'border', 'border-gray-200');
+
+                    personnelItem.innerHTML = `
+                        <div class="flex-grow text-gray-800 text-center sm:text-left mb-2 sm:mb-0">
+                            <p class="font-semibold text-lg">${data.name}</p>
+                            <p class="text-sm text-gray-600">Email: ${data.email}</p>
+                            <p class="text-sm text-gray-600">Puesto: ${data.position}</p>
+                            <p class="text-sm text-gray-600">Departamento: ${data.department}</p>
+                        </div>
+                        <button data-id="${personnelId}"
+                                class="delete-btn bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md transition duration-150 ease-in-out">
+                            Eliminar
+                        </button>
+                    `;
+                    personnelList.appendChild(personnelItem);
+                });
+
+                // Attach event listeners to newly created delete buttons
+                document.querySelectorAll('.delete-btn').forEach(button => {
+                    button.addEventListener('click', handleDelete);
+                });
+            }, (error) => {
+                console.error("Error al obtener documentos en tiempo real:", error);
+                personnelList.innerHTML = `<p class="text-center text-red-500">Error al cargar el personal: ${error.message}</p>`;
+                loadingMessage.classList.add('hidden');
+            });
         }
-      }
-    });
-  </script>
+
+        /**
+         * Handles the deletion of a personnel record.
+         * @param {Event} e - The click event from the delete button.
+         */
+        async function handleDelete(e) {
+            const personnelId = e.target.dataset.id;
+            if (!personnelId) {
+                console.error("ID de personal no encontrado para eliminar.");
+                return;
+            }
+
+            if (!isAuthReady) {
+                console.log("Autenticación no lista para eliminar.");
+                showConfirmationModal("Error", "La autenticación no está lista. Por favor, espera un momento y vuelve a intentarlo.");
+                return;
+            }
+
+            const confirmed = await showConfirmationModal(
+                "Confirmar Eliminación",
+                "¿Estás seguro de que quieres eliminar este registro de personal? Esta acción es irreversible."
+            );
+
+            if (confirmed) {
+                try {
+                    const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+                    const docRef = doc(db, `artifacts/${appId}/users/${currentUserId}/personnel`, personnelId);
+                    await deleteDoc(docRef);
+                    showConfirmationModal("Éxito", "Personal eliminado exitosamente.");
+                } catch (error) {
+                    console.error("Error al eliminar documento: ", error);
+                    showConfirmationModal("Error", `Hubo un error al eliminar el personal: ${error.message}`);
+                }
+            } else {
+                console.log("Eliminación cancelada.");
+            }
+        }
+
+    </script>
 </body>
 </html>
